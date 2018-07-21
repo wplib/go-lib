@@ -6,16 +6,16 @@ import (
 	"fmt"
 	"os"
 	"github.com/mikeschinkel/gjson"
-	"strings"
+
 )
 
 type Project struct {
 	json []byte
-	Stack Stack
+	Stack ProjectStack
 }
 
-func NewProject() Project {
-	return Project{}
+func NewProject() *Project {
+	return &Project{}
 }
 
 func (p *Project) LoadJSON() {
@@ -27,21 +27,19 @@ func (p *Project) LoadJSON() {
 	p.json = json
 }
 
-func (p *Project) GetStackComponents() ComponentList {
+func (p *Project) GetComponents() ComponentList {
 	r:= gjson.GetBytes(p.json,"stack" )
 	rm:= r.Map()
 	cl := make(ComponentList,len(rm))
 	for n,v:= range rm {
-		ct := strings.Split(n,"/")
-		cl[v.Index] = &Component{
-			Index: v.Index,
-			Name: v.String(),
-			Class: ServiceComponent,
-			Type: ComponentType{
-				Group: ct[0],
-				Type: ct[1],
-			},
-		}
+		sc := NewStackComponent(v.String())
+		sc.Type = NewComponentType(n)
+		sc.Index = v.Index
+		cl[sc.Index] = sc
 	}
 	return cl
+}
+
+type ProjectStack struct {
+	Components ComponentList
 }
