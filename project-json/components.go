@@ -10,12 +10,16 @@ type Component struct {
 	Class ComponentClass
 }
 
-type ComponentClass struct {
-	Source string
-	Group string
-	Type string
-	Version string
-}
+type ComponentClass int
+
+const (
+	ServiceComponent  = iota
+	ExecutableComponent
+	ScriptComponent
+	SourceComponent
+	DataComponent
+	MediaComponent
+)
 
 type ComponentType struct {
 	Source string

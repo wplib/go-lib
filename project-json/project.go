@@ -35,7 +35,8 @@ func (p *Project) GetStackComponents() ComponentList {
 		ct := strings.Split(n,"/")
 		cl[v.Index] = &Component{
 			Index: v.Index,
-			Name:  v.String(),
+			Name: v.String(),
+			Class: ServiceComponent,
 			Type: ComponentType{
 				Group: ct[0],
 				Type: ct[1],
