@@ -32,7 +32,7 @@ func (p *Project) GetComponents() ComponentList {
 	rm:= r.Map()
 	cl := make(ComponentList,len(rm))
 	for n,v:= range rm {
-		sc := NewStackComponent(v.String())
+		sc := NewServiceComponent(v.String())
 		sc.Type = NewComponentType(n)
 		sc.Index = v.Index
 		cl[sc.Index] = sc
