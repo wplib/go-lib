@@ -15,15 +15,16 @@ type Project struct {
 }
 
 func NewProject() Project {
-	var project Project
+	return Project{}
+}
 
+func (p *Project) LoadJSON() {
 	json, err := ioutil.ReadFile("../project.json")
 	if err != nil {
 		fmt.Println(err.Error())
 		os.Exit(1)
 	}
-	project.json = json
-	return project
+	p.json = json
 }
 
 func (p *Project) GetStackComponents() ComponentList {
