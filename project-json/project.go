@@ -43,7 +43,3 @@ func (p *Project) GetStackComponents() ComponentList {
 	}
 	return cl
 }
-
-type Stack struct {
-	Components ComponentList
-}
