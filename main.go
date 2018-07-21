@@ -7,8 +7,8 @@ import (
 	"io/ioutil"
 	"fmt"
 	"os"
-	"github.com/tidwall/gjson"
 	"strings"
+	"github.com/mikeschinkel/gjson"
 )
 
 type Project struct {
