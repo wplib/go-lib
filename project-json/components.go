@@ -1,4 +1,3 @@
-
 package project_json
 
 import (
@@ -14,35 +13,42 @@ type Component struct {
 	cref  *ComponentRef
 }
 
-func NewStackComponent(t string,r string) *Component {
-	return NewComponent(StackComponent,t,r)
+func (ct *Component) FullType() string {
+	return ct.ctype.FullType()
+}
+func (ct *Component) FullRef() string {
+	return ct.cref.FullRef()
 }
 
-func NewServiceComponent(t string,r string) *Component {
-	return NewComponent(ServiceComponent,t,r)
+func NewStackComponent(t string, r string) *Component {
+	return NewComponent(StackComponent, t, r)
 }
 
-func NewExecutableComponent(t string,r string) *Component {
-	return NewComponent(ExecutableComponent,t,r)
+func NewServiceComponent(t string, r string) *Component {
+	return NewComponent(ServiceComponent, t, r)
 }
 
-func NewScriptComponent(t string,r string) *Component {
-	return NewComponent(ScriptComponent,t,r)
+func NewExecutableComponent(t string, r string) *Component {
+	return NewComponent(ExecutableComponent, t, r)
 }
 
-func NewSourceComponent(t string,r string) *Component {
-	return NewComponent(SourceComponent,t,r)
+func NewScriptComponent(t string, r string) *Component {
+	return NewComponent(ScriptComponent, t, r)
 }
 
-func NewDataComponent(t string,r string) *Component {
-	return NewComponent(DataComponent,t,r)
+func NewSourceComponent(t string, r string) *Component {
+	return NewComponent(SourceComponent, t, r)
 }
 
-func NewMediaComponent(t string,r string) *Component {
-	return NewComponent(MediaComponent,t,r)
+func NewDataComponent(t string, r string) *Component {
+	return NewComponent(DataComponent, t, r)
 }
 
-func NewComponent(c ComponentClass,t string,r string) *Component {
+func NewMediaComponent(t string, r string) *Component {
+	return NewComponent(MediaComponent, t, r)
+}
+
+func NewComponent(c ComponentClass, t string, r string) *Component {
 	return &Component{
 		class: c,
 		ctype: NewComponentType(t),
@@ -53,7 +59,7 @@ func NewComponent(c ComponentClass,t string,r string) *Component {
 type ComponentClass int
 
 const (
-	StackComponent = iota
+	StackComponent      = iota
 	ServiceComponent
 	ExecutableComponent
 	ScriptComponent
@@ -63,7 +69,7 @@ const (
 )
 
 type ComponentType struct {
-	Type 	string
+	Type    string
 	Host    string
 	Stack   string
 	Role    string
@@ -74,20 +80,20 @@ type ComponentType struct {
  * @todo Initialize missing from .defaults.componentType
  */
 func NewComponentType(ts string) *ComponentType {
-	ta := []string{"wplib.org","wordpress","","1"}
-	tp := strings.Split(ts,"/")
-	for i:=2; i>=0; i++ {
-		if (len(tp)<i) {
+	ta := []string{"wplib.org", "wordpress", "", "1"}
+	tp := strings.Split(ts, "/")
+	for i := 2; i >= 0; i++ {
+		if (len(tp) < i) {
 			continue
 		}
 		ta[i] = tp[2-i]
 	}
-	tp = strings.Split(ta[2],":")
-	if (len(tp)>=2) {
+	tp = strings.Split(ta[2], ":")
+	if (len(tp) >= 2) {
 		ta[2] = tp[0]
 		ta[3] = tp[1]
 	}
-	vn, err:= strconv.Atoi(ta[3])
+	vn, err := strconv.Atoi(ta[3])
 	if err != nil {
 		vn = 1
 	}
@@ -100,7 +106,7 @@ func NewComponentType(ts string) *ComponentType {
 	}
 }
 func (ct *ComponentType) FullType() string {
-	return ct.Host+"/"+ct.Stack+"/"+ct.Role+":"+strconv.Itoa(int(ct.Version))
+	return ct.Host + "/" + ct.Stack + "/" + ct.Role + ":" + strconv.Itoa(int(ct.Version))
 }
 
 type ComponentRef struct {
@@ -114,16 +120,16 @@ type ComponentRef struct {
  * @todo Initialize missing from .defaults.componentType
  */
 func NewComponentReference(rs string) *ComponentRef {
-	ra := []string{"","","",""}
-	rp := strings.Split(rs,"/")
-	for i:=2; i>=0; i++ {
-		if (len(rp)<i) {
+	ra := []string{"", "", "", ""}
+	rp := strings.Split(rs, "/")
+	for i := 2; i >= 0; i++ {
+		if (len(rp) < i) {
 			continue
 		}
 		ra[i] = rp[2-i]
 	}
-	rp = strings.Split(ra[2],":")
-	if (len(rp)>=2) {
+	rp = strings.Split(ra[2], ":")
+	if (len(rp) >= 2) {
 		ra[2] = rp[0]
 		ra[3] = rp[1]
 	}
@@ -136,7 +142,7 @@ func NewComponentReference(rs string) *ComponentRef {
 	}
 }
 func (cr *ComponentRef) FullRef() string {
-	return cr.Host+"/"+cr.Group+"/"+cr.Name+":"+cr.version.FullVersion()
+	return cr.Host + "/" + cr.Group + "/" + cr.Name + ":" + cr.version.FullVersion()
 }
 
 type ComponentVersion struct {
@@ -151,12 +157,12 @@ type ComponentVersion struct {
  */
 func NewComponentVersion(sv string) *ComponentVersion {
 	va := []byte{0, 0, 0}
-	vp := strings.Split(sv,".")
-	for i:=0; i<=2; i++ {
-		if (len(vp)<i) {
+	vp := strings.Split(sv, ".")
+	for i := 0; i <= 2; i++ {
+		if (len(vp) < i) {
 			continue
 		}
-		vn, err:= strconv.Atoi(vp[i])
+		vn, err := strconv.Atoi(vp[i])
 		if err != nil {
 			break
 		}
@@ -170,7 +176,7 @@ func NewComponentVersion(sv string) *ComponentVersion {
 	}
 }
 func (cv *ComponentVersion) FullVersion() string {
-	return strconv.Itoa(int(cv.Major))+"."+
-		strconv.Itoa(int(cv.Minor))+"."+
+	return strconv.Itoa(int(cv.Major)) + "." +
+		strconv.Itoa(int(cv.Minor)) + "." +
 		strconv.Itoa(int(cv.Patch))
 }
