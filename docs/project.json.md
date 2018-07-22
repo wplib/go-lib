@@ -11,20 +11,20 @@ The `component[s]` command
 #### List 
 The _"Component List"_ command displays as list of components.
 
-#####Simple List
+##### Simple List
 A simple list will output those found in `project.json`:     
 ```bash
 $ project components list 
 ```
 
-#####Available List
+##### Available List
 An `--available` list w/o a value will display the components found to be available at 
 the default host and group found in `project.json`:       
 ```
 $ project components list --available 
 ```
 
-#####Available List w/Host and Group
+##### Available List w/Host and Group
 An `--available={host-group}` list with a value will display the components found to be available at 
 the specified host and group:       
 ```
