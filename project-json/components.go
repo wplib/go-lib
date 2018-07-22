@@ -20,33 +20,33 @@ func (ct *Component) FullRef() string {
 	return ct.cref.FullRef()
 }
 
-func NewStackComponent(t string, r string) *Component {
-	return NewComponent(StackComponent, t, r)
-}
+//func NewStackComponent(t string, r string) *Component {
+//	return NewComponent(StackComponent, t, r)
+//}
 
 func NewServiceComponent(t string, r string) *Component {
 	return NewComponent(ServiceComponent, t, r)
 }
 
-func NewExecutableComponent(t string, r string) *Component {
-	return NewComponent(ExecutableComponent, t, r)
-}
-
-func NewScriptComponent(t string, r string) *Component {
-	return NewComponent(ScriptComponent, t, r)
-}
-
-func NewSourceComponent(t string, r string) *Component {
-	return NewComponent(SourceComponent, t, r)
-}
-
-func NewDataComponent(t string, r string) *Component {
-	return NewComponent(DataComponent, t, r)
-}
-
-func NewMediaComponent(t string, r string) *Component {
-	return NewComponent(MediaComponent, t, r)
-}
+//func NewExecutableComponent(t string, r string) *Component {
+//	return NewComponent(ExecutableComponent, t, r)
+//}
+//
+//func NewScriptComponent(t string, r string) *Component {
+//	return NewComponent(ScriptComponent, t, r)
+//}
+//
+//func NewSourceComponent(t string, r string) *Component {
+//	return NewComponent(SourceComponent, t, r)
+//}
+//
+//func NewDataComponent(t string, r string) *Component {
+//	return NewComponent(DataComponent, t, r)
+//}
+//
+//func NewMediaComponent(t string, r string) *Component {
+//	return NewComponent(MediaComponent, t, r)
+//}
 
 func NewComponent(c ComponentClass, t string, r string) *Component {
 	return &Component{
@@ -59,13 +59,13 @@ func NewComponent(c ComponentClass, t string, r string) *Component {
 type ComponentClass int
 
 const (
-	StackComponent      = iota
-	ServiceComponent
-	ExecutableComponent
-	ScriptComponent
-	SourceComponent
-	DataComponent
-	MediaComponent
+	//StackComponent      = iota
+	ServiceComponent      = iota
+	//ExecutableComponent
+	//ScriptComponent
+	//SourceComponent
+	//DataComponent
+	//MediaComponent
 )
 
 type ComponentType struct {
