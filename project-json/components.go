@@ -13,12 +13,6 @@ type Component struct {
 	ctype *ComponentType
 	cref  *ComponentRef
 }
-func (ct *Component) FullType() string {
-	return ct.ctype.FullType()
-}
-func (ct *Component) FullRef() string {
-	return ct.cref.FullRef()
-}
 
 func NewStackComponent(t string,r string) *Component {
 	return NewComponent(StackComponent,t,r)
