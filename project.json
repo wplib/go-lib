@@ -11,14 +11,16 @@
     "mkdocs/webserver": "mkdocs:0.15.3"
   },
   "defaults": {
-    "componentType": {
-      "host": "wplib.org",
-      "stack": "wordpress"
-    },
-    "componentRef": {
-      "host": "github.com",
-      "group": "wplib"
-    },
+    "stack": {
+      "componentType": {
+        "host": "wplib.org",
+        "stack": "wordpress"
+      },
+      "component": {
+        "host": "github.com",
+        "group": "wplib"
+      }
+    }
   }
 }
 
