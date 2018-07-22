@@ -6,7 +6,6 @@ import "strings"
 type ComponentList []*Component
 
 type Component struct {
-	Index int
 	Class ComponentClass
 	Type  *ComponentType
 	Source string
