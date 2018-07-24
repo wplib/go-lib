@@ -2,12 +2,14 @@
 package project_json
 
 import (
-	"io/ioutil"
-	"fmt"
-	"os"
-	"github.com/mikeschinkel/gjson"
-
+	"github.com/tidwall/gjson"
 )
+
+type ProjectWrapper interface {
+	GetProject() *Project
+	SetJSON(json []byte)
+	GetComponents() ComponentList
+}
 
 type Project struct {
 	json []byte
@@ -18,26 +20,23 @@ func NewProject() *Project {
 	return &Project{}
 }
 
-func (p *Project) LoadJSON() {
-	json, err := ioutil.ReadFile("../project.json")
-	if err != nil {
-		fmt.Println(err.Error())
-		os.Exit(1)
-	}
-	p.json = json
+func (p *Project) GetProject() *Project {
+	return p
+}
+
+func (p *Project) SetJSON(json []byte) {
+	p.json=json
 }
 
 func (p *Project) GetComponents() ComponentList {
 	r:= gjson.GetBytes(p.json,"stack" )
-	rm:= r.Map()
-	cl := make(ComponentList,len(rm))
-	for n,v:= range rm {
-		sc := NewServiceComponent(n,v.String())
-		cl[v.Index] = sc
-	}
+	cl := make(ComponentList,len(r.Map()))
+	index := 0
+	r.ForEach(func(k,v gjson.Result) bool {
+		cl[index] = NewServiceComponent(k.String(),v.String())
+		index++
+		return true
+	})
 	return cl
 }
 
-type ProjectStack struct {
-	Components ComponentList
-}
