@@ -7,7 +7,7 @@
 - `new(Foo)` is same as `&Foo{}` _(the latter did not exist in early GoLang)_ 
 - There is no `&Foo` 
 - If `f1:=&Foo{}` and `f2:=Foo{}` then `*f1==f2` and `f1==&f2`
-- `*f1==f2` compares content of structs
+- `*f1==f2` compares content of structs _(mostly they are not, this would be `false`)_
 - `*f1==f2` compares the pointers are the same
 
 
