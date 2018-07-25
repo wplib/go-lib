@@ -8,12 +8,12 @@ type Component struct {
 	cref  *ComponentRef
 }
 
-func (ct *Component) FullType() string {
-	return ct.ctype.FullType()
+func (ct *Component) GetType() string {
+	return ct.ctype.GetType()
 }
 
-func (ct *Component) FullRef() string {
-	return ct.cref.FullRef()
+func (ct *Component) GetReference() string {
+	return ct.cref.GetLocator()
 }
 
 func NewComponent(class ComponentClass,typestr,refstr string) *Component {
