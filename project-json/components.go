@@ -4,31 +4,34 @@ type ComponentList []*Component
 
 type Component struct {
 	class ComponentClass
-	ctype *ComponentType
-	cref  *ComponentRef
+	*ComponentType
+	*ComponentLocation
 }
 
-func (ct *Component) GetType() string {
-	return ct.ctype.GetType()
+func (c *Component) GetType() string {
+	return c.ComponentType.GetLocation()
 }
 
-func (ct *Component) GetReference() string {
-	return ct.cref.GetLocator()
+func (c *Component) GetLocation() string {
+	return c.ComponentLocation.GetLocation()
 }
 
 func NewComponent(class ComponentClass,typestr,refstr string) *Component {
+	var err error
 	ct := NewComponentType()
-	if err := ct.Parse(typestr); err != nil {
+	err = ct.Parse(typestr)
+	if err != nil {
 		panic(err)
 	}
-	cr := NewComponentRef()
-	if err := cr.Parse(refstr); err != nil {
+	cr := NewComponentLocation()
+	err = cr.Parse(refstr)
+	if err != nil {
 		panic(err)
 	}
 	return &Component{
 		class: class,
-		ctype: ct,
-		cref:  cr,
+		ComponentType: ct,
+		ComponentLocation: cr,
 	}
 }
 

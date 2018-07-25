@@ -1,31 +1,23 @@
 package project_json
 
-/**
- * @todo Pull these from defaults somehow
- * These constants is only temporary
- */
-const (
-	_DefaultCTypeHost = "wplib.org"
-	_DefaultCTypeStack = "wordpress"
-	_DefaultCTypeName = ""
-	_DefaultCTypeVersion = "1"
+import (
+	"github.com/wplib/project-cli/component_type"
 )
 
 type ComponentType struct {
-	ctype   string
-	Locator
+	*Location
 }
 
-func NewComponentType() *ComponentType {
-	l := NewLocatable(IntegerVersionStyle)
+func NewComponentType() * ComponentType {
+	l := NewLocation(IntegerVersionStyle)
 	l.SetDefaults(
-		_DefaultCTypeHost,
-		_DefaultCTypeStack,
-		_DefaultCTypeName,
-		_DefaultCTypeVersion,
+		component_type.DefaultHost(),
+		component_type.DefaultStack(),
+		component_type.DefaultName(),
+		component_type.DefaultVersion(),
 	)
 	return &ComponentType{
-		Locator: l,
+		Location: l,
 	}
 }
 
@@ -38,7 +30,7 @@ func (ct *ComponentType) GetVersion() int {
 }
 
 func (ct *ComponentType) GetStringVersion() string {
-	return ct.Locator.GetVersion()
+	return ct.Location.GetVersion()
 }
 
 func (ct *ComponentType) GetType() string {

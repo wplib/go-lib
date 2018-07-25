@@ -12,13 +12,11 @@ const (
 	DottedVersionStyle
 )
 
-const DefaultIntegerVersion = 1
+type LocationDefaults [4]string
 
-type LocatableDefaults [4]string
-
-type Locatable struct {
-	parsed   string
-	defaults LocatableDefaults
+type Location struct {
+	raw      string
+	defaults LocationDefaults
 	host     string
 	group    string
 	name     string
@@ -28,17 +26,17 @@ type Locatable struct {
 	integer  int
 }
 
-func NewLocatable(vs byte) *Locatable {
-	return &Locatable{
+func NewLocation(vs byte) *Location {
+	return &Location{
 		style: vs,
 	}
 }
 
-func (l *Locatable) GetLocator() string {
+func (l *Location) GetLocation() string {
 	return l.host + "/" + l.group + "/" + l.name + ":" + l.version
 }
 
-func (l *Locatable) SetDefaults(host, group, item, version string) {
+func (l *Location) SetDefaults(host, group, item, version string) *Location {
 	if (l.style == IntegerVersionStyle) {
 		vn, err := strconv.Atoi(version)
 		if err != nil {
@@ -54,51 +52,52 @@ func (l *Locatable) SetDefaults(host, group, item, version string) {
 		}
 		version = dv.GetVersion()
 	}
-	l.defaults = LocatableDefaults{host, group, item, version}
+	l.defaults = LocationDefaults{host, group, item, version}
+	return l
 }
 
-func (l *Locatable) GetParsed() string {
-	return l.parsed
+func (l *Location) GetRawLocation() string {
+	return l.raw
 }
 
-func (l *Locatable) GetDefaults() LocatableDefaults {
+func (l *Location) GetDefaults() LocationDefaults {
 	return l.defaults
 }
 
-func (l *Locatable) GetHost() string {
+func (l *Location) GetHost() string {
 	return l.host
 }
 
-func (l *Locatable) GetGroup() string {
+func (l *Location) GetGroup() string {
 	return l.group
 }
 
-func (l *Locatable) GetName() string {
+func (l *Location) GetName() string {
 	return l.name
 }
 
-func (l *Locatable) GetVersion() string {
+func (l *Location) GetVersion() string {
 	return l.version
 }
 
-func (l *Locatable) GetDottedVersionable() *DottedVersionable {
+func (l *Location) GetDottedVersionable() *DottedVersionable {
 	return l.dotted
 }
 
-func (l *Locatable) GetDottedVersion() string {
+func (l *Location) GetDottedVersion() string {
 	return l.dotted.GetVersion()
 }
 
-func (l *Locatable) GetIntegerVersion() int {
+func (l *Location) GetIntegerVersion() int {
 	return l.integer
 }
 
-func (l *Locatable) Parse(locstr string) error {
+func (l *Location) Parse(locstr string) error {
 	la := l.defaults
 	lp := strings.Split(locstr, "/")
 	ll := len(lp)
 	if ll > 3 {
-		msg := fmt.Sprintf("Locatable ['%v'] can only have two slashes; as in: '{host}/{stack}/{role}'.", locstr)
+		msg := fmt.Sprintf("Location ['%v'] can only have two slashes; as in: '{host}/{stack}/{role}'.", locstr)
 		err := errors.New(msg)
 		return err
 	}
@@ -113,14 +112,15 @@ func (l *Locatable) Parse(locstr string) error {
 	lp = strings.Split(la[2], ":")
 	ll = len(lp)
 	if ll > 2 {
-		msg := fmt.Sprintf("Locatable ['%v'] can only have one colon (to denote version.)", locstr)
+		msg := fmt.Sprintf("Location ['%v'] can only have one colon (to denote version.)", locstr)
 		err := errors.New(msg)
 		return err
 	}
 	if ll == 2 {
+		la[2] = lp[0]
 		la[3] = lp[1]
 	}
-	l.parsed = locstr
+	l.raw = locstr
 	l.host = la[0]
 	l.group = la[1]
 	l.name = la[2]
@@ -142,23 +142,23 @@ func (l *Locatable) Parse(locstr string) error {
 	return nil
 }
 
-func (l *Locatable) parseIntegerVersion(verstr string) (int,error) {
+func (l *Location) parseIntegerVersion(verstr string) (int,error) {
 	iv, err := strconv.Atoi(verstr)
 	if err != nil {
 		msg := "Version ['%v'] in locator ['%v'] is not a valid integer: %v"
-		msg = fmt.Sprintf( msg, verstr, l.parsed, err )
+		msg = fmt.Sprintf( msg, verstr, l.raw, err )
 		err = errors.New(msg)
 		return 0,err
 	}
 	return iv,nil
 }
 
-func (l *Locatable) parseDottedVersion(verstr string) (*DottedVersionable,error) {
+func (l *Location) parseDottedVersion(verstr string) (*DottedVersionable,error) {
 	dv := NewDottedVersionable()
 	err := dv.Parse(verstr)
 	if err != nil {
 		msg := "Invalid value ['%v'] in locator ['%v'] for dotted-style version: %v"
-		msg = fmt.Sprintf( msg, verstr, l.parsed, err )
+		msg = fmt.Sprintf( msg, verstr, l.raw, err )
 		err = errors.New(msg)
 		return nil,err
 	}

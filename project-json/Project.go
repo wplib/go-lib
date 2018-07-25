@@ -30,11 +30,10 @@ func (p *Project) SetJSON(json []byte) {
 
 func (p *Project) GetComponents() ComponentList {
 	r:= gjson.GetBytes(p.json,"stack" )
-	cl := make(ComponentList,len(r.Map()))
-	index := 0
+	cl := ComponentList{}
 	r.ForEach(func(k,v gjson.Result) bool {
-		cl[index] = NewServiceComponent(k.String(),v.String())
-		index++
+		c:= NewServiceComponent(k.String(),v.String())
+		cl = append(cl,c)
 		return true
 	})
 	return cl

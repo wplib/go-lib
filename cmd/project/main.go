@@ -18,7 +18,7 @@ func main() {
 	pf.SetFilepath("../project.json")
 	pf.LoadJSON()
 	for i, c:= range pf.GetComponents() {
-		fmt.Printf("\n[%d] %-22v %v",i,c.GetType()+":",c.GetReference())
+		fmt.Printf("\n[%d] %-22v %v",i,c.GetType()+":",c.GetLocation())
 	}
 }
 
