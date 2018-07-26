@@ -15,7 +15,7 @@ type DottedVersion struct {
 	patch    byte
 }
 
-func NewDottedVersionable() *DottedVersion {
+func NewDottedVersion() *DottedVersion {
 	dv := &DottedVersion{}
 	dv.SetDefaults(0,0,0)
 	dv.Reset()
@@ -33,9 +33,9 @@ func (dv *DottedVersion) Reset() {
 	dv.raw = dv.GetVersion()
 }
 
-func (dv *DottedVersion) Parse(sv string) error {
+func (dv *DottedVersion) Parse(verstr string) error {
 	va := dv.defaults
-	vp := strings.Split(sv, ".")
+	vp := strings.Split(verstr, ".")
 	for i := 0; i <= 2; i++ {
 		if (len(vp) < i) {
 			continue
@@ -46,7 +46,7 @@ func (dv *DottedVersion) Parse(sv string) error {
 		}
 		va[i] = byte(vn)
 	}
-	dv.raw = sv
+	dv.raw = verstr
 	for i:=0; i<2; i++ {
 		vseg,err := strconv.Atoi(strconv.Itoa(int(va[i])))
 		if err != nil {

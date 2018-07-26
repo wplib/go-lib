@@ -59,6 +59,8 @@ func (l *Location) SetDefaults(host, group, item, version string) *Location {
 func chkParsed(l *Location) {
 	if ! l.parsed {
 		// See: https://stackoverflow.com/a/25927915/102699
+		// See also: https://stackoverflow.com/questions/7052693/how-to-get-the-name-of-a-function-in-go
+		// See also: https://lawlessguy.wordpress.com/2016/04/17/display-file-function-and-line-number-in-go-golang/
 		pc := make([]uintptr, 1)
 		runtime.Callers(2, pc)
 		f := runtime.FuncForPC(pc[0])
@@ -186,7 +188,7 @@ func (l *Location) parseIntegerVersion(verstr string) (byte,error) {
 }
 
 func (l *Location) parseDottedVersion(verstr string) (*DottedVersion,error) {
-	dv := NewDottedVersionable()
+	dv := NewDottedVersion()
 	err := dv.Parse(verstr)
 	if err != nil {
 		msg := "Invalid value ['%v'] in locator ['%v'] for dotted-style version: %v"
