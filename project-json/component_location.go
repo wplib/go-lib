@@ -1,6 +1,9 @@
 package project_json
 
-import "github.com/wplib/project-cli/component_location"
+import (
+	"github.com/wplib/project-cli/component_location"
+	"github.com/wplib/project-cli/constant"
+)
 
 type ComponentLocation struct {
 	*Location
@@ -10,7 +13,7 @@ type ComponentLocation struct {
  * @todo Initialize missing from defaults somehow
  */
 func NewComponentLocation() *ComponentLocation {
-	l := NewLocation(DottedVersionStyle)
+	l := NewLocation(constant.DottedVersionStyle)
 	l.SetDefaults(
 		component_location.DefaultHost(),
 		component_location.DefaultGroup(),

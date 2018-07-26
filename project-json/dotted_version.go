@@ -5,8 +5,8 @@ import (
 	"strconv"
 	"fmt"
 	"errors"
+	"github.com/wplib/project-cli/constant"
 )
-
 type DottedVersion struct {
 	raw      string
 	defaults [3]byte
@@ -35,10 +35,10 @@ func (dv *DottedVersion) Reset() {
 
 func (dv *DottedVersion) Parse(verstr string) error {
 	va := dv.defaults
-	vp := strings.Split(verstr, ".")
+	vp := strings.Split(verstr+"."+constant.DefaultDottedVersion, ".")
 	for i := 0; i <= 2; i++ {
-		if (len(vp) < i) {
-			continue
+		if (len(vp) <= i) {
+			break
 		}
 		vn, err := strconv.Atoi(vp[i])
 		if err != nil {

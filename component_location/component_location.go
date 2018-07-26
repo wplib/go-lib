@@ -1,5 +1,6 @@
 package component_location
 
+import "github.com/wplib/project-cli/constant"
 
 func DefaultHost() string {
 	return "github.com"
@@ -11,5 +12,5 @@ func DefaultName() string {
 	return ""
 }
 func DefaultVersion() string {
-	return "0.0.0"
+	return constant.DefaultDottedVersion
 }

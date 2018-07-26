@@ -1,5 +1,7 @@
 package component_type
 
+import "github.com/wplib/project-cli/constant"
+
 func DefaultHost() string {
 	return "wplib.org"
 }
@@ -10,5 +12,5 @@ func DefaultName() string {
 	return ""
 }
 func DefaultVersion() string {
-	return "1"
+	return constant.DefaultIntegerVersion
 }

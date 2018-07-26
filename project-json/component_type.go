@@ -2,6 +2,7 @@ package project_json
 
 import (
 	"github.com/wplib/project-cli/component_type"
+	"github.com/wplib/project-cli/constant"
 )
 
 type ComponentType struct {
@@ -9,7 +10,7 @@ type ComponentType struct {
 }
 
 func NewComponentType() * ComponentType {
-	l := NewLocation(IntegerVersionStyle)
+	l := NewLocation(constant.IntegerVersionStyle)
 	l.SetDefaults(
 		component_type.DefaultHost(),
 		component_type.DefaultStack(),

@@ -1,5 +1,7 @@
 package project_json
 
+import "github.com/wplib/project-cli/constant"
+
 type ComponentList []*Component
 
 type Component struct {
@@ -19,10 +21,10 @@ func (c *Component) GetLocation() string {
 func NewComponent(class ComponentClass,typestr,refstr string) *Component {
 	var err error
 	ct := NewComponentType()
-	//err = ct.Parse(typestr)
-	//if err != nil {
-	//	panic(err)
-	//}
+	err = ct.Parse(typestr)
+	if err != nil {
+		panic(err)
+	}
 	cr := NewComponentLocation()
 	err = cr.Parse(refstr)
 	if err != nil {
@@ -36,30 +38,30 @@ func NewComponent(class ComponentClass,typestr,refstr string) *Component {
 }
 
 //func NewStackComponent(typestr,refstr string) *Component {
-//	return NewComponent(StackComponent,typestr,refstr)
+//	return NewComponent(constant.StackComponent,typestr,refstr)
 //}
 
 func NewServiceComponent(typestr,refstr string) *Component {
-	return NewComponent(ServiceComponent,typestr,refstr)
+	return NewComponent(constant.ServiceComponent,typestr,refstr)
 }
 
 //func NewExecutableComponent(typestr,refstr string) *Component {
-//	return NewComponent(ExecutableComponent,typestr,refstr)
+//	return NewComponent(constant.ExecutableComponent,typestr,refstr)
 //}
 //
 //func NewScriptComponent(typestr,refstr string) *Component {
-//	return NewComponent(ScriptComponent,typestr,refstr)
+//	return NewComponent(constant.ScriptComponent,typestr,refstr)
 //}
 //
 //func NewSourceComponent(typestr,refstr string) *Component {
-//	return NewComponent(SourceComponent,typestr,refstr)
+//	return NewComponent(constant.SourceComponent,typestr,refstr)
 //}
 //
 //func NewDataComponent(typestr,refstr string) *Component {
-//	return NewComponent(DataComponent,typestr,refstr)
+//	return NewComponent(constant.DataComponent,typestr,refstr)
 //}
 //
 //func NewMediaComponent(typestr,refstr string) *Component {
-//	return NewComponent(MediaComponent,typestr,refstr)
+//	return NewComponent(constant.MediaComponent,typestr,refstr)
 //}
 
