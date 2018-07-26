@@ -5,6 +5,7 @@ import (
 	"fmt"
 	"errors"
 	"strconv"
+	"runtime"
 )
 
 const (
@@ -15,6 +16,7 @@ const (
 type LocationDefaults [4]string
 
 type Location struct {
+	parsed   bool
 	raw      string
 	defaults LocationDefaults
 	host     string
@@ -22,25 +24,22 @@ type Location struct {
 	name     string
 	version  string
 	style    byte
-	dotted   *DottedVersionable
-	integer  int
+	*DottedVersion
+	integer  byte
 }
 
 func NewLocation(vs byte) *Location {
 	return &Location{
 		style: vs,
+		parsed:false,
 	}
-}
-
-func (l *Location) GetLocation() string {
-	return l.host + "/" + l.group + "/" + l.name + ":" + l.version
 }
 
 func (l *Location) SetDefaults(host, group, item, version string) *Location {
 	if (l.style == IntegerVersionStyle) {
 		vn, err := strconv.Atoi(version)
 		if err != nil {
-			msg := fmt.Sprintf( "Invalid default value ['%v'] for integer-style version: err", version, err )
+			msg := fmt.Sprintf( "Invalid default value ['%v'] for integer-style version: %v", version, err )
 			err = errors.New(msg)
 			panic(err)
 		}
@@ -52,44 +51,71 @@ func (l *Location) SetDefaults(host, group, item, version string) *Location {
 		}
 		version = dv.GetVersion()
 	}
+	l.parsed = false
 	l.defaults = LocationDefaults{host, group, item, version}
 	return l
 }
 
+func chkParsed(l *Location) {
+	if ! l.parsed {
+		// See: https://stackoverflow.com/a/25927915/102699
+		pc := make([]uintptr, 1)
+		runtime.Callers(2, pc)
+		f := runtime.FuncForPC(pc[0])
+		file, line := f.FileLine(pc[0])
+		msg:= "Parse() not yet called, in %s:%d"
+		msg = fmt.Sprintf(msg, file, line)
+		panic(errors.New(msg))
+	}
+}
+
+func (l *Location) GetLocation() string {
+	chkParsed(l)
+	return l.host + "/" + l.group + "/" + l.name + ":" + l.version
+}
+
 func (l *Location) GetRawLocation() string {
+	chkParsed(l)
 	return l.raw
 }
 
 func (l *Location) GetDefaults() LocationDefaults {
+	chkParsed(l)
 	return l.defaults
 }
 
 func (l *Location) GetHost() string {
+	chkParsed(l)
 	return l.host
 }
 
 func (l *Location) GetGroup() string {
+	chkParsed(l)
 	return l.group
 }
 
 func (l *Location) GetName() string {
+	chkParsed(l)
 	return l.name
 }
 
 func (l *Location) GetVersion() string {
+	chkParsed(l)
 	return l.version
 }
 
-func (l *Location) GetDottedVersionable() *DottedVersionable {
-	return l.dotted
+func (l *Location) GetVersionStyle() byte {
+	return l.style
 }
 
-func (l *Location) GetDottedVersion() string {
-	return l.dotted.GetVersion()
+func (l *Location) GetDottedVersion() *DottedVersion {
+	chkParsed(l)
+	return l.DottedVersion
 }
 
 func (l *Location) GetIntegerVersion() int {
-	return l.integer
+	chkParsed(l)
+	return int(l.integer)
 }
 
 func (l *Location) Parse(locstr string) error {
@@ -124,25 +150,31 @@ func (l *Location) Parse(locstr string) error {
 	l.host = la[0]
 	l.group = la[1]
 	l.name = la[2]
-	var err error
+	if l.name==EmptyString {
+		msg := fmt.Sprintf("Location ['%v'] cannot have an empty name.", locstr)
+		err := errors.New(msg)
+		return err
+	}
 	if l.style == IntegerVersionStyle {
-		l.integer, err = l.parseIntegerVersion(la[3])
+		iv, err := l.parseIntegerVersion(la[3])
 		if err != nil {
 			return err
 		}
-		l.version = strconv.Itoa(l.integer)
+		l.version = strconv.Itoa(int(iv))
+		l.integer = iv
 
 	} else if l.style == DottedVersionStyle {
-		l.dotted, err = l.parseDottedVersion(la[3])
+		dv, err := l.parseDottedVersion(la[3])
 		if err != nil {
 			return err
 		}
-		l.version = l.dotted.GetVersion()
+		l.version = dv.GetVersion()
 	}
+	l.parsed = true
 	return nil
 }
 
-func (l *Location) parseIntegerVersion(verstr string) (int,error) {
+func (l *Location) parseIntegerVersion(verstr string) (byte,error) {
 	iv, err := strconv.Atoi(verstr)
 	if err != nil {
 		msg := "Version ['%v'] in locator ['%v'] is not a valid integer: %v"
@@ -150,10 +182,10 @@ func (l *Location) parseIntegerVersion(verstr string) (int,error) {
 		err = errors.New(msg)
 		return 0,err
 	}
-	return iv,nil
+	return byte(iv),nil
 }
 
-func (l *Location) parseDottedVersion(verstr string) (*DottedVersionable,error) {
+func (l *Location) parseDottedVersion(verstr string) (*DottedVersion,error) {
 	dv := NewDottedVersionable()
 	err := dv.Parse(verstr)
 	if err != nil {

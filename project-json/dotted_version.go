@@ -7,33 +7,33 @@ import (
 	"errors"
 )
 
-type DottedVersionable struct {
-	parsed string
+type DottedVersion struct {
+	raw      string
 	defaults [3]byte
-	major  byte
-	minor  byte
-	patch  byte
+	major    byte
+	minor    byte
+	patch    byte
 }
 
-func NewDottedVersionable() *DottedVersionable {
-	dv := &DottedVersionable{}
+func NewDottedVersionable() *DottedVersion {
+	dv := &DottedVersion{}
 	dv.SetDefaults(0,0,0)
 	dv.Reset()
 	return dv
 }
 
-func (dv *DottedVersionable) SetDefaults(mj,mn,p byte) {
+func (dv *DottedVersion) SetDefaults(mj,mn,p byte) {
 	dv.defaults = [3]byte{mj, mn, p}
 }
 
-func (dv *DottedVersionable) Reset() {
+func (dv *DottedVersion) Reset() {
 	dv.major = dv.defaults[0]
 	dv.minor = dv.defaults[1]
 	dv.patch = dv.defaults[2]
-	dv.parsed = dv.GetVersion()
+	dv.raw = dv.GetVersion()
 }
 
-func (dv *DottedVersionable) Parse(sv string) error {
+func (dv *DottedVersion) Parse(sv string) error {
 	va := dv.defaults
 	vp := strings.Split(sv, ".")
 	for i := 0; i <= 2; i++ {
@@ -46,7 +46,7 @@ func (dv *DottedVersionable) Parse(sv string) error {
 		}
 		va[i] = byte(vn)
 	}
-	dv.parsed = sv
+	dv.raw = sv
 	for i:=0; i<2; i++ {
 		vseg,err := strconv.Atoi(strconv.Itoa(int(va[i])))
 		if err != nil {
@@ -62,14 +62,18 @@ func (dv *DottedVersionable) Parse(sv string) error {
 	return nil
 }
 
-func (dv *DottedVersionable) GetParsed() string {
-	return dv.parsed
+func (dv *DottedVersion) GetRaw() string {
+	return dv.raw
 }
 
-func (dv *DottedVersionable) GetVersion() string {
+func (dv *DottedVersion) GetRawVersion() string {
+	return dv.raw
+}
+
+func (dv *DottedVersion) GetVersion() string {
 	return dv.GetMajorMinor() + "." + strconv.Itoa(int(dv.patch))
 }
 
-func (dv *DottedVersionable) GetMajorMinor() string {
+func (dv *DottedVersion) GetMajorMinor() string {
 	return strconv.Itoa(int(dv.major)) + "." + strconv.Itoa(int(dv.minor))
 }

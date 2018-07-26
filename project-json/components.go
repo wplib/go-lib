@@ -19,10 +19,10 @@ func (c *Component) GetLocation() string {
 func NewComponent(class ComponentClass,typestr,refstr string) *Component {
 	var err error
 	ct := NewComponentType()
-	err = ct.Parse(typestr)
-	if err != nil {
-		panic(err)
-	}
+	//err = ct.Parse(typestr)
+	//if err != nil {
+	//	panic(err)
+	//}
 	cr := NewComponentLocation()
 	err = cr.Parse(refstr)
 	if err != nil {

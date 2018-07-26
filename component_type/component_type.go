@@ -4,7 +4,7 @@ func DefaultHost() string {
 	return "wplib.org"
 }
 func DefaultStack() string {
-	return "wplib"
+	return "wordpress"
 }
 func DefaultName() string {
 	return ""
