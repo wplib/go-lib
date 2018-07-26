@@ -112,11 +112,21 @@ func (l *Location) GetVersionStyle() byte {
 
 func (l *Location) GetDottedVersion() *DottedVersion {
 	chkParsed(l)
+	if l.style!=constant.DottedVersionStyle {
+		msg:="Call to GetDottedVersion() for locator ['%v'] invalid for version style %v."
+		err:= errors.New(msg)
+		panic(err)
+	}
 	return l.DottedVersion
 }
 
 func (l *Location) GetIntegerVersion() int {
 	chkParsed(l)
+	if l.style!=constant.IntegerVersionStyle {
+		msg:="Call to GetIntegerVersion() for locator ['%v'] invalid for version style %v."
+		err:= errors.New(msg)
+		panic(err)
+	}
 	return int(l.integer)
 }
 
