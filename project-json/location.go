@@ -24,6 +24,10 @@ type Location struct {
 	integer  byte
 }
 
+/*==============
+ UNTESTED funcs
+ ==============*/
+
 func NewLocation(vs byte) *Location {
 	return &Location{
 		style:  vs,
@@ -52,26 +56,6 @@ func (l *Location) SetDefaults(host, group, item, version string) *Location {
 	return l
 }
 
-func chkParsed(l *Location) {
-	if ! l.parsed {
-		// See: https://stackoverflow.com/a/25927915/102699
-		// See also: https://stackoverflow.com/questions/7052693/how-to-get-the-name-of-a-function-in-go
-		// See also: https://lawlessguy.wordpress.com/2016/04/17/display-file-function-and-line-number-in-go-golang/
-		pc := make([]uintptr, 1)
-		runtime.Callers(2, pc)
-		f := runtime.FuncForPC(pc[0])
-		file, line := f.FileLine(pc[0])
-		msg := "Parse() not yet called, in %s:%d"
-		msg = fmt.Sprintf(msg, file, line)
-		panic(errors.New(msg))
-	}
-}
-
-func (l *Location) GetLocation() string {
-	chkParsed(l)
-	return l.host + "/" + l.group + "/" + l.name + ":" + l.version
-}
-
 func (l *Location) GetRawLocation() string {
 	chkParsed(l)
 	return l.raw
@@ -84,21 +68,6 @@ func (l *Location) GetParsed() bool {
 func (l *Location) GetDefaults() LocationDefaults {
 	chkParsed(l)
 	return l.defaults
-}
-
-func (l *Location) GetHost() string {
-	chkParsed(l)
-	return l.host
-}
-
-func (l *Location) GetGroup() string {
-	chkParsed(l)
-	return l.group
-}
-
-func (l *Location) GetName() string {
-	chkParsed(l)
-	return l.name
 }
 
 func (l *Location) GetVersion() string {
@@ -130,6 +99,30 @@ func (l *Location) GetIntegerVersion() int {
 	return int(l.integer)
 }
 
+
+/*==============
+ TESTED funcs
+ ==============*/
+func (l *Location) GetLocation() string {
+	chkParsed(l)
+	return l.host + "/" + l.group + "/" + l.name + ":" + l.version
+}
+
+func (l *Location) GetHost() string {
+	chkParsed(l)
+	return l.host
+}
+
+func (l *Location) GetGroup() string {
+	chkParsed(l)
+	return l.group
+}
+
+func (l *Location) GetName() string {
+	chkParsed(l)
+	return l.name
+}
+
 func (l *Location) Parse(locstr string) error {
 	la := l.defaults
 	lp := strings.Split(locstr, "/")
@@ -150,11 +143,7 @@ func (l *Location) Parse(locstr string) error {
 	lp = strings.Split(la[2], ":")
 	ll = len(lp)
 	if ll < 2 {
-		if l.style==constant.IntegerVersionStyle {
-			la[3] = constant.DefaultIntegerVersion
-		} else {
-			la[3] = constant.DefaultDottedVersion
-		}
+		la[3] = constant.GetVersionStyleDefault(l.style)
 	}
 	if ll == 2 {
 		la[2] = lp[0]
@@ -192,6 +181,9 @@ func (l *Location) Parse(locstr string) error {
 	l.parsed = true
 	return nil
 }
+/*==============
+ PRIVATE funcs
+ ==============*/
 
 func (l *Location) parseIntegerVersion(verstr string) (byte, error) {
 	iv, err := strconv.Atoi(verstr)
@@ -214,4 +206,19 @@ func (l *Location) parseDottedVersion(verstr string) (*DottedVersion, error) {
 		return nil, err
 	}
 	return dv, nil
+}
+
+func chkParsed(l *Location) {
+	if ! l.parsed {
+		// See: https://stackoverflow.com/a/25927915/102699
+		// See also: https://stackoverflow.com/questions/7052693/how-to-get-the-name-of-a-function-in-go
+		// See also: https://lawlessguy.wordpress.com/2016/04/17/display-file-function-and-line-number-in-go-golang/
+		pc := make([]uintptr, 1)
+		runtime.Callers(2, pc)
+		f := runtime.FuncForPC(pc[0])
+		file, line := f.FileLine(pc[0])
+		msg := "Parse() not yet called, in %s:%d"
+		msg = fmt.Sprintf(msg, file, line)
+		panic(errors.New(msg))
+	}
 }

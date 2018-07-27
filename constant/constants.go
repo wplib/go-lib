@@ -12,6 +12,16 @@ const (
 	DottedVersionStyle
 )
 
+var versionStyleMap = map[int]string {
+	IntegerVersionStyle: DefaultIntegerVersion,
+	DottedVersionStyle: DefaultDottedVersion,
+}
+
+func GetVersionStyleDefault(style byte) string {
+	return versionStyleMap[int(style)]
+}
+
+
 const (
 	//StackComponent      = iota
 	ServiceComponent      = iota

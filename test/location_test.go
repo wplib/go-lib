@@ -1,10 +1,11 @@
-package project_json
+package test
 
 
 import (
 	"testing"
 	"github.com/wplib/project-cli/constant"
 	"github.com/wplib/project-cli/qa"
+	pj "github.com/wplib/project-cli/project-json"
 )
 
 type testDefaults struct {
@@ -58,10 +59,10 @@ var locationTests = []locationData{
 	{dotted,"nginx", "github.com/wplib/nginx:0.0.0","github.com","wplib","nginx"},
 }
 
-func TestVersionLocation(t *testing.T) {
+func TestLocation(t *testing.T) {
 	for _, ld := range locationTests {
 		d := ld.defaults
-		l := NewLocation(d.style)
+		l := pj.NewLocation(d.style)
 		l.SetDefaults( d.host, d.group, d.name, d.ver )
 		th:= qa.NewTestHarness(t,ld,l)
 		th.Run(func(){
@@ -75,8 +76,8 @@ func TestVersionLocation(t *testing.T) {
 	}
 }
 
-func getLocation(th *qa.TestHarness) *Location {
-	return th.Item.(*Location)
+func getLocation(th *qa.TestHarness) *pj.Location {
+	return th.Item.(*pj.Location)
 }
 
 func parseTest(th *qa.TestHarness) error {
@@ -90,7 +91,7 @@ func parseTest(th *qa.TestHarness) error {
 }
 
 func locationTest(th *qa.TestHarness) {
-	l:= th.Item.(*Location)
+	l:= th.Item.(*pj.Location)
 	ls:= l.GetLocation()
 	if ls != th.Output() {
 		th.T.Errorf("wanted %q, got %q", th.Output(), ls)
@@ -98,7 +99,7 @@ func locationTest(th *qa.TestHarness) {
 }
 
 func hostTest(th *qa.TestHarness) {
-	l := th.Item.(*Location)
+	l := th.Item.(*pj.Location)
 	d := th.InOut.(locationData)
 	h := l.GetHost()
 	if h != d.host {
@@ -107,7 +108,7 @@ func hostTest(th *qa.TestHarness) {
 }
 
 func groupTest(th *qa.TestHarness) {
-	l:= th.Item.(*Location)
+	l:= th.Item.(*pj.Location)
 	d:= th.InOut.(locationData)
 	g:= l.GetGroup()
 	if g != d.group {
@@ -115,7 +116,7 @@ func groupTest(th *qa.TestHarness) {
 	}
 }
 func nameTest(th *qa.TestHarness) {
-	l:= th.Item.(*Location)
+	l:= th.Item.(*pj.Location)
 	d:= th.InOut.(locationData)
 	g:= l.GetName()
 	if g != d.name {
