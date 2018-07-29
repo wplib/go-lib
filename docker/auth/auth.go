@@ -5,8 +5,15 @@ import (
 	"io/ioutil"
 	"net/url"
 	"encoding/json"
+	"github.com/wplib/go-lib/docker/api"
 )
 
+type AuthToken struct {
+	Token string `json:"token"`
+	AccessToken string  `json:"access_token"`
+	ExpiresIn int `json:"expires_in"`
+	IssuedAt string `json:"issued_at"`
+}
 
 func GetAuthToken(repo,scope string) (string,error){
 	p:= "/token"
@@ -14,8 +21,8 @@ func GetAuthToken(repo,scope string) (string,error){
 		"service":{"registry.docker.io"},
 		"scope":{"repository:"+repo+":"+scope},
 	}
-	au:= docker.BuildApiUrl(docker.AuthDomain,"",p,q.Encode())
-	client,req,err := docker.NewHttpGetRequest(au)
+	au:= api.BuildUrl(docker.AuthDomain,"",p,q.Encode())
+	client,req,err := api.NewHttpGetRequest(au)
 	if err != nil{
 		return "",err
 	}
@@ -27,22 +34,7 @@ func GetAuthToken(repo,scope string) (string,error){
 	if err != nil{
 		return "",err
 	}
-	authToken := docker.AuthToken{}
+	authToken := AuthToken{}
 	err = json.Unmarshal(body,&authToken)
 	return authToken.Token,err
 }
-
-
-//func foo(){
-//	var netTransport = &http.Transport{
-//		Dial: (&net.Dialer{
-//			Timeout: 5 * time.Second,
-//		}).Dial,
-//		TLSHandshakeTimeout: 5 * time.Second,
-//	}
-//	var netClient = &http.Client{
-//		Timeout: time.Second * 10,
-//		Transport: netTransport,
-//	}
-//	response, _ := netClient.Get(url)
-//}
