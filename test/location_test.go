@@ -3,9 +3,9 @@ package test
 
 import (
 	"testing"
-	"github.com/wplib/project-cli/constant"
-	"github.com/wplib/project-cli/qa"
-	pj "github.com/wplib/project-cli/project-json"
+	"github.com/wplib/go-lib/qa"
+	"github.com/wplib/go-lib/constant"
+	"github.com/wplib/go-lib/location"
 )
 
 type testDefaults struct {
@@ -33,11 +33,11 @@ func (ld locationData) Output() string {
 	return ld.out
 }
 var locationTests = []locationData{
-	{integer,constant.EmptyString, qa.ErrExpected,"","",""},
-	{integer,"webserver:abc", qa.ErrExpected,"","",""},
-	{integer,":1", qa.ErrExpected,"","",""},
-	{integer,"webserver:1:0", qa.ErrExpected,"","",""},
-	{integer,"world/wplib.org/wordpress/webserver:1", qa.ErrExpected,"","",""},
+	{integer,constant.EmptyString, constant.ErrExpected,"","",""},
+	{integer,"webserver:abc", constant.ErrExpected,"","",""},
+	{integer,":1", constant.ErrExpected,"","",""},
+	{integer,"webserver:1:0", constant.ErrExpected,"","",""},
+	{integer,"world/wplib.org/wordpress/webserver:1", constant.ErrExpected,"","",""},
 	{integer,"wplib.org/lxmp/webserver","wplib.org/lxmp/webserver:1","wplib.org","lxmp","webserver"},
 	{integer,"wplib.org/wordpress/webserver:1","wplib.org/wordpress/webserver:1","wplib.org","wordpress","webserver"},
 	{integer,"wplib.org/wordpress/webserver","wplib.org/wordpress/webserver:1","wplib.org","wordpress","webserver"},
@@ -45,11 +45,11 @@ var locationTests = []locationData{
 	{integer,"wordpress/webserver","wplib.org/wordpress/webserver:1","wplib.org","wordpress","webserver"},
 	{integer,"webserver","wplib.org/wordpress/webserver:1","wplib.org","wordpress","webserver"},
 	{integer,"webserver:2","wplib.org/wordpress/webserver:2","wplib.org","wordpress","webserver"},
-	{dotted,constant.EmptyString, qa.ErrExpected,"","",""},
-	{dotted,"nginx:abc", qa.ErrExpected,"","",""},
-	{dotted,":1.14.0", qa.ErrExpected,"","",""},
-	{dotted,"nginx:1.14.0:0", qa.ErrExpected,"","",""},
-	{dotted,"world/github.com/wplib/nginx:1.14.0", qa.ErrExpected,"","",""},
+	{dotted,constant.EmptyString, constant.ErrExpected,"","",""},
+	{dotted,"nginx:abc", constant.ErrExpected,"","",""},
+	{dotted,":1.14.0", constant.ErrExpected,"","",""},
+	{dotted,"nginx:1.14.0:0", constant.ErrExpected,"","",""},
+	{dotted,"world/github.com/wplib/nginx:1.14.0", constant.ErrExpected,"","",""},
 	{dotted,"nginx:2", "github.com/wplib/nginx:2.0.0","github.com","wplib","nginx"},
 	{dotted,"github.com/wplib/nginx:1.14.0", "github.com/wplib/nginx:1.14.0","github.com","wplib","nginx"},
 	{dotted,"github.com/lxmp/nginx", "github.com/lxmp/nginx:0.0.0","github.com","lxmp","nginx"},
@@ -62,7 +62,7 @@ var locationTests = []locationData{
 func TestLocation(t *testing.T) {
 	for _, ld := range locationTests {
 		d := ld.defaults
-		l := pj.NewLocation(d.style)
+		l := location.NewLocation(d.style)
 		l.SetDefaults( d.host, d.group, d.name, d.ver )
 		th:= qa.NewTestHarness(t,ld,l)
 		th.Run(func(){
@@ -76,13 +76,13 @@ func TestLocation(t *testing.T) {
 	}
 }
 
-func getLocation(th *qa.TestHarness) *pj.Location {
-	return th.Item.(*pj.Location)
+func getLocation(th *qa.TestHarness) *location.Location {
+	return th.Item.(*location.Location)
 }
 
 func parseTest(th *qa.TestHarness) error {
 	err := getLocation(th).Parse(th.Input())
-	if th.Output() == qa.ErrExpected {
+	if th.Output() == constant.ErrExpected {
 		if err == nil {
 			th.T.Errorf("wanted error %q, did not get", th.Input())
 		}
@@ -91,7 +91,7 @@ func parseTest(th *qa.TestHarness) error {
 }
 
 func locationTest(th *qa.TestHarness) {
-	l:= th.Item.(*pj.Location)
+	l:= th.Item.(*location.Location)
 	ls:= l.GetLocation()
 	if ls != th.Output() {
 		th.T.Errorf("wanted %q, got %q", th.Output(), ls)
@@ -99,7 +99,7 @@ func locationTest(th *qa.TestHarness) {
 }
 
 func hostTest(th *qa.TestHarness) {
-	l := th.Item.(*pj.Location)
+	l := th.Item.(*location.Location)
 	d := th.InOut.(locationData)
 	h := l.GetHost()
 	if h != d.host {
@@ -108,7 +108,7 @@ func hostTest(th *qa.TestHarness) {
 }
 
 func groupTest(th *qa.TestHarness) {
-	l:= th.Item.(*pj.Location)
+	l:= th.Item.(*location.Location)
 	d:= th.InOut.(locationData)
 	g:= l.GetGroup()
 	if g != d.group {
@@ -116,7 +116,7 @@ func groupTest(th *qa.TestHarness) {
 	}
 }
 func nameTest(th *qa.TestHarness) {
-	l:= th.Item.(*pj.Location)
+	l:= th.Item.(*location.Location)
 	d:= th.InOut.(locationData)
 	g:= l.GetName()
 	if g != d.name {

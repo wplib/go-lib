@@ -1,5 +1,8 @@
 package constant
 
+
+const ErrExpected = "~"
+
 const EmptyString = ""
 
 const (

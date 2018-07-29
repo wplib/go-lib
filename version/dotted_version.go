@@ -1,11 +1,11 @@
-package project_json
+package version
 
 import (
 	"strings"
 	"strconv"
 	"fmt"
 	"errors"
-	"github.com/wplib/project-cli/constant"
+	"github.com/wplib/go-lib/constant"
 )
 type DottedVersion struct {
 	raw      string

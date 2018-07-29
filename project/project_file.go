@@ -1,4 +1,4 @@
-package project_json
+package project
 
 import (
 	"io/ioutil"

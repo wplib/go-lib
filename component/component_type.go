@@ -1,21 +1,22 @@
-package project_json
+package component
 
 import (
-	"github.com/wplib/project-cli/component_type"
-	"github.com/wplib/project-cli/constant"
+	"github.com/wplib/go-lib/defaults"
+	"github.com/wplib/go-lib/constant"
+	"github.com/wplib/go-lib/location"
 )
 
 type ComponentType struct {
-	*Location
+	*location.Location
 }
 
 func NewComponentType() * ComponentType {
-	l := NewLocation(constant.IntegerVersionStyle)
+	l := location.NewLocation(constant.IntegerVersionStyle)
 	l.SetDefaults(
-		component_type.DefaultHost(),
-		component_type.DefaultStack(),
-		component_type.DefaultName(),
-		component_type.DefaultVersion(),
+		defaults.DefaultTypeHost(),
+		defaults.DefaultTypeStack(),
+		defaults.DefaultTypeName(),
+		defaults.DefaultTypeVersion(),
 	)
 	return &ComponentType{
 		Location: l,

@@ -1,7 +1,8 @@
-package project_json
+package component
 
-import "github.com/wplib/project-cli/constant"
-
+import (
+	"github.com/wplib/go-lib/constant"
+)
 type ComponentList []*Component
 
 type Component struct {
@@ -11,7 +12,7 @@ type Component struct {
 }
 
 func (c *Component) GetType() string {
-	return c.ComponentType.GetLocation()
+	return c.ComponentType.GetType()
 }
 
 func (c *Component) GetLocation() string {

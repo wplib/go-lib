@@ -1,4 +1,4 @@
-package project_json
+package location
 
 import (
 	"strings"
@@ -6,7 +6,8 @@ import (
 	"errors"
 	"strconv"
 	"runtime"
-	"github.com/wplib/project-cli/constant"
+	"github.com/wplib/go-lib/constant"
+	"github.com/wplib/go-lib/version"
 )
 
 type LocationDefaults [4]string
@@ -20,7 +21,7 @@ type Location struct {
 	name     string
 	version  string
 	style    byte
-	*DottedVersion
+	*version.DottedVersion
 	integer  byte
 }
 
@@ -79,7 +80,7 @@ func (l *Location) GetVersionStyle() byte {
 	return l.style
 }
 
-func (l *Location) GetDottedVersion() *DottedVersion {
+func (l *Location) GetDottedVersion() *version.DottedVersion {
 	chkParsed(l)
 	if l.style!=constant.DottedVersionStyle {
 		msg:="Call to GetDottedVersion() for locator ['%v'] invalid for version style %v."
@@ -196,8 +197,8 @@ func (l *Location) parseIntegerVersion(verstr string) (byte, error) {
 	return byte(iv), nil
 }
 
-func (l *Location) parseDottedVersion(verstr string) (*DottedVersion, error) {
-	dv := NewDottedVersion()
+func (l *Location) parseDottedVersion(verstr string) (*version.DottedVersion, error) {
+	dv := version.NewDottedVersion()
 	err := dv.Parse(verstr)
 	if err != nil {
 		msg := "Invalid value ['%v'] in locator ['%v'] for dotted-style version: %v"

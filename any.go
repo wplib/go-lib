@@ -1,4 +1,4 @@
-package project_json
+package _go
 
 type Any interface{}
 

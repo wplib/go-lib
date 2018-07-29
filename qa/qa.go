@@ -5,8 +5,6 @@ import "testing"
 type Any interface{}
 	
 
-const ErrExpected = "~"
-
 type InOut interface {
 	Input() string
 	Output() string

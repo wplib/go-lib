@@ -1,14 +1,15 @@
 
-package project_json
+package project
 
 import (
 	"github.com/tidwall/gjson"
+	"github.com/wplib/go-lib/component"
 )
 
 type ProjectWrapper interface {
 	GetProject() *Project
 	SetJSON(json []byte)
-	GetComponents() ComponentList
+	GetComponents() component.ComponentList
 }
 
 type Project struct {
@@ -28,11 +29,11 @@ func (p *Project) SetJSON(json []byte) {
 	p.json=json
 }
 
-func (p *Project) GetComponents() ComponentList {
+func (p *Project) GetComponents() component.ComponentList {
 	r:= gjson.GetBytes(p.json,"stack" )
-	cl := ComponentList{}
+	cl := component.ComponentList{}
 	r.ForEach(func(k,v gjson.Result) bool {
-		c:= NewServiceComponent(k.String(),v.String())
+		c:= component.NewServiceComponent(k.String(),v.String())
 		cl = append(cl,c)
 		return true
 	})
