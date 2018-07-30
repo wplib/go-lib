@@ -21,22 +21,27 @@ type TagTree struct {
 func (tt TagTree) Tag() string {
 	return tt.tag
 }
+
 func (tt TagTree) Children() *map[string]TagTree {
 	return &tt.children
 }
+
 func (tt TagTree) SortedChildren() []TagTree {
 	return tt.sorted
 }
+
 func (tt TagTree) GetChild(tag string) *TagTree {
 	tc := tt.children[tag]
 	return &tc
 }
+
 func NewEmptyTagTree(tag string) *TagTree {
 	return &TagTree{
 		tag:      tag,
 		children: make(map[string]TagTree),
 	}
 }
+
 func NewTagTree(name string, list TagList) (TagTree, error) {
 	tt := NewEmptyTagTree(name)
 	for _, t := range list {
